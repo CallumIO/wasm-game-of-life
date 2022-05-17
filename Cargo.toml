@@ -1,0 +1,22 @@
+[package]
+name = "wasm-game-of-life"
+version = "0.1.0"
+authors = ["Callum Leslie"]
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["console_error_panic_hook"]
+
+[dependencies]
+wasm-bindgen =  "0.2.80"
+console_error_panic_hook = { version = "0.1.7", optional = true } # Easier debugging - remove for release ?
+wee_alloc = { version = "0.4.5", optional = true } # Better allocator for wasm
+
+[dev-dependencies]
+wasm-bindgen-test =  "0.3.30"
+
+[profile.release]
+opt-level = "s" # Minify binary size
