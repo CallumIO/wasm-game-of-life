@@ -21,4 +21,4 @@ jobs:
     - name: Build
       run: wasm-pack build --verbose
     - name: Run tests
-      run: wasm-pack test --verbose
+      run: wasm-pack test --node --verbose
