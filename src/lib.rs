@@ -23,8 +23,32 @@ pub struct Universe {
     height: u32,
     cells: Vec<LifeCell>,
 }
-
+#[wasm_bindgen]
 impl Universe {
+    pub fn new() -> Universe {
+        let width = 64;
+        let height = 64;
+        let cells = (0..width * height)
+            .map(|i| {
+                if i % 2 == 0 || i % 7 == 0 {
+                    LifeCell::Alive
+                } else {
+                    LifeCell::Dead
+                }
+            })
+            .collect();
+
+        Universe {
+            width,
+            height,
+            cells,
+        }
+    }
+
+    pub fn render(&self) -> String {
+        self.to_string()
+    }
+
     pub fn next_iteration(&mut self) {
         let mut next = self.cells.clone();
         for y in 0..self.height {
@@ -35,15 +59,18 @@ impl Universe {
                 let next_cell = match (cell, neighbours_alive) {
                     (LifeCell::Alive, x) if x < 2 => LifeCell::Dead,
                     (LifeCell::Alive, 2) | (LifeCell::Alive, 3) => LifeCell::Alive,
-                    (LifeCell::Alive, x) if x < 3 => LifeCell::Dead,
+                    (LifeCell::Alive, x) if x > 3 => LifeCell::Dead,
                     (LifeCell::Dead, 3) => LifeCell::Alive,
                     (otherwise, _) => otherwise,
                 };
                 next[id] = next_cell;
             }
         }
+        self.cells = next;
     }
+}
 
+impl Universe {
     fn get_index(&self, y: u32, x: u32) -> usize {
         (y * self.width + x) as usize
     }
